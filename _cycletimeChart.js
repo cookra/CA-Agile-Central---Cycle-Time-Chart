@@ -1,11 +1,11 @@
-Ext.define('Rally.technicalservices.cycleTimeChart',{
+Ext.define('Rally.technicalservices.cycleTimeChart', {
     extend: 'Rally.ui.chart.Chart',
     alias: 'widget.progresschart',
 
     itemId: 'rally-chart',
     chartData: {},
     loadMask: false,
-    chartColors : [],
+    chartColors: [],
     chartConfig: {
         // colors : ["#E0E0E0","#00a9e0","#fad200","#8dc63f"],
         chart: {
@@ -26,19 +26,17 @@ Ext.define('Rally.technicalservices.cycleTimeChart',{
             // }
             //tickInterval : 24 * 3600 * 1000,
             title: {
-                enabled : true,
+                enabled: true,
                 text: 'Date'
             },
             startOnTick: true,
             endOnTick: true
         },
-        yAxis: [
-            {
-                title: {
-                    text: 'Days'
-                }
+        yAxis: [{
+            title: {
+                text: 'Days'
             }
-        ],
+        }],
 
         plotOptions: {
             scatter: {
@@ -47,11 +45,25 @@ Ext.define('Rally.technicalservices.cycleTimeChart',{
                     headerFormat: '<b>{series.name}</b><br>',
                     pointFormat: '{point.x}<br>{point.workItem.FormattedID}:{point.workItem.Name} ({point.y})'
                 }
-
+            },
+            // -> R Cook
+            series: {
+                point: {
+                    events: {
+                        click: function() {
+                            console.log('1st -> ', app.type);
+                            console.log('2nd -> ', this.workItem.ObjectID)
+                            console.log('Method Dad -> ', Rally.nav.Manager.showDetail(Rally.util.Ref.getRefFromTypeAndOid(app.type, this.workItem.ObjectID)))
+                            console.log('Method Son -> ', Rally.util.Ref.getRefFromTypeAndOid(app.type, this.workItem.ObjectID))
+                            Rally.nav.Manager.showDetail(Rally.util.Ref.getRefFromTypeAndOid(app.type, this.workItem.ObjectID));
+                        }
+                    }
+                }
             }
+            // <
         }
     },
-    constructor: function (config) {
+    constructor: function(config) {
         // var config = Ext.merge()
         _.first(this.chartConfig.yAxis).plotLines = config.chartData.plotLines;
         _.first(this.chartConfig.yAxis).title.text = config.chartData.granularity;
@@ -62,9 +74,9 @@ Ext.define('Rally.technicalservices.cycleTimeChart',{
 
         this.callParent(arguments);
 
-        console.log("chart config",this.chartConfig);
-        
-        if (config.title){
+        console.log("chart config", this.chartConfig);
+
+        if (config.title) {
             this.chartConfig.title = config.title;
         }
     }
